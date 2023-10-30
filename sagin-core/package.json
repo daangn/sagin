@@ -1,0 +1,13 @@
+{
+  "name": "@sagin/core",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./models": "./src/models.ts"
+  },
+  "publishConfig": {
+    "exports": {
+      "./models": "./lib/models.js"
+    }
+  }
+}

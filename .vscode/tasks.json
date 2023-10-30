@@ -1,0 +1,41 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "Up Dev Infra",
+      "command": "docker compose up",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "dependsOn": [
+      ],
+      "isBackground": true
+    },
+    {
+      "type": "shell",
+      "label": "Start Indexer",
+      "command": "yarn workspace @sagin/indexer-notion dev",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "dependsOn": [
+      ],
+      "isBackground": true
+    },
+    {
+      "type": "shell",
+      "label": "Start App",
+      "command": "yarn workspace @sagin/app dev",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "dependsOn": [
+      ],
+      "isBackground": true
+    },
+  ]
+}

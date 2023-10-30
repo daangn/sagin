@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: sagin
+      POSTGRES_PASSWORD: sagin
+    volumes:
+      - ./initdb.d:/docker-entrypoint-initdb.d:ro
+      - postgres:/var/lib/postgresql/data:rw
+
+  meili:
+    image: getmeili/meilisearch:v1.3
+    ports:
+      - 7700:7700
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: sagin
+    volumes:
+      - meili:/meili_data:rw
+
+volumes:
+  postgres:
+  meili:

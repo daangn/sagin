@@ -1,0 +1,53 @@
+{
+  "name": "@sagin/app",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "next build",
+    "start": "next start",
+    "ui": "shadcn-ui",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
+    "@radix-ui/react-avatar": "^1.0.4",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@sagin/core": "workspace:^",
+    "@sagin/db": "workspace:^",
+    "@sagin/indexer": "workspace:^",
+    "@trpc/client": "^10.43.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "cmdk": "^0.2.0",
+    "drizzle-orm": "^0.29.0",
+    "lucide-react": "^0.292.0",
+    "next": "^14.0.2",
+    "next-auth": "^4.24.5",
+    "next-themes": "^0.2.1",
+    "react": "experimental",
+    "react-dom": "experimental",
+    "tailwind-merge": "^2.0.0",
+    "tailwindcss-animate": "^1.0.7",
+    "znv": "^0.4.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@trpc/server": "^10.43.3",
+    "@types/node": "^20.9.0",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "shadcn-ui": "^0.4.1",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

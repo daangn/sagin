@@ -1,0 +1,37 @@
+{
+  "name": "@sagin/db",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth": "./src/auth.ts",
+    "./schema": "./src/schema.ts",
+    "./pool": "./src/pool.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      ".": "./lib/index.js",
+      "./auth": "./lib/auth.js",
+      "./schema": "./lib/schema.js",
+      "./pool": "./lib/pool.js"
+    }
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate:pg",
+    "push": "drizzle-kit push:pg",
+    "studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@auth/core": "^0.18.1",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@sagin/core": "workspace:^",
+    "drizzle-orm": "^0.29.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.10.9",
+    "drizzle-kit": "^0.20.2",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "@types/node",
+      "vite/client"
+    ],
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

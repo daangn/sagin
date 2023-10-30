@@ -1,0 +1,23 @@
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": true,
+    "source.organizeImports.biome": true
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "0.0.0.0",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "sagin",
+      "database": "sagin",
+      "username": "sagin",
+      "password": "sagin"
+    }
+  ]
+}
