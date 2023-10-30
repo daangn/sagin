@@ -1,0 +1,38 @@
+{
+  "name": "@sagin/indexer",
+  "exports": {
+    "./services": "./src/services.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "exports": {
+      "./services": "./lib/services.js",
+      "./schema": "./lib/schema.js"
+    }
+  },
+  "scripts": {
+    "drizzle:generate": "drizzle-kit generate:pg",
+    "drizzle:push": "drizzle-kit push:pg",
+    "drizzle:studio": "drizzle-kit studio"
+  },
+  "peerDependencies": {
+    "@trpc/server": "^10.0.0",
+    "zod": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@trpc/server": {
+      "optional": true
+    },
+    "zod": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@trpc/server": "^10.40.0",
+    "drizzle-kit": "^0.19.13",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9",
+    "zod": "^3.22.2"
+  }
+}

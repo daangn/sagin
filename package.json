@@ -1,0 +1,17 @@
+{
+  "name": "project",
+  "private": true,
+  "workspaces": [
+    "sagin-app",
+    "sagin-indexer",
+    "sagin-indexer-notion"
+  ],
+  "scripts": {
+    "format": "biome format --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.0.0",
+    "typescript": "^5.2.2"
+  },
+  "packageManager": "yarn@4.0.1"
+}
