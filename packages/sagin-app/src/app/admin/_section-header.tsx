@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
-import { type NavItem } from './_common';
+import { type NavItem } from './_common.ts';
 
 type Props = {
   navItems: NavItem[];

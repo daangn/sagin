@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { type IndexerConnection } from '~/common/indexer';
-import { createIndexerClient } from '~/lib/indexer';
+import { type IndexerConnection } from '~/common/indexer.ts';
+import { createIndexerClient } from '~/lib/indexer.ts';
 
 type Props = {
   connection: IndexerConnection;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import IndexerConnectionInfo from './_indexer-connection-info';
+import IndexerConnectionInfo from './_indexer-connection-info.tsx';
 
 type IndexerConnection = {
   type: 'notion';

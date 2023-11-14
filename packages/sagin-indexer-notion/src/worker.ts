@@ -40,7 +40,6 @@ export async function setupWorker(app: FastifyInstance): Promise<void> {
     await runner.stop();
     await runner.promise;
   });
-  app.addJob('fetch-notion', {});
 }
 
 function getTaskList() {

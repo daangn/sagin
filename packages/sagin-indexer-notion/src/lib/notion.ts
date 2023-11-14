@@ -1,11 +1,11 @@
 import { Client } from '@notionhq/client';
 
-import env from '~/lib/env';
+import env from '~/lib/env.ts';
 
 const notion = new Client({
   auth: env.NOTION_API_KEY,
 });
 export default notion;
 
-export * from './notion/content';
-export * from './notion/url';
+export * from './notion/content.ts';
+export * from './notion/url.ts';

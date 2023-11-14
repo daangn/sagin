@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { publicProcedure, router } from './_base';
+import { publicProcedure, router } from './_base.ts';
 
 const systemStatusSchema = z.object({
   category: z.enum(['healthy', 'not_healthy']),
@@ -25,14 +25,14 @@ export const systemRouter = router({
     .query(async ({ ctx }) => {
       try {
         const status = await ctx.services.system.healthCheck();
-        return { status }
+        return { status };
       } catch (e) {
         return {
           status: {
             category: 'not_healthy',
             label: 'Unavailable',
-          }
-        }
+          },
+        };
       }
     }),
 });

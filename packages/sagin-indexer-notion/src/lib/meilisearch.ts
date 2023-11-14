@@ -1,5 +1,6 @@
 import { MeiliSearch } from 'meilisearch';
-import env from '~/lib/env';
+
+import env from '~/lib/env.ts';
 
 const meilisearch = new MeiliSearch({
   host: env.MEILISEARCH_URL,

@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
-import { buttonVariants } from '~/components/ui/button';
-import { cn } from '~/lib/utils';
+import { buttonVariants } from '~/components/ui/button.ts';
+import { cn } from '~/lib/utils.ts';
 
-import { type NavItem } from './_common';
+import { type NavItem } from './_common.ts';
 
 type SidebarNavProps = React.HTMLAttributes<HTMLElement> & {
   navItems: NavItem[];

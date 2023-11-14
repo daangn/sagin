@@ -1,13 +1,19 @@
 {
   "name": "@sagin/indexer",
   "type": "module",
+  "scripts": {
+    "build": "vite build"
+  },
   "exports": {
     "./services": "./src/services.ts"
   },
   "publishConfig": {
     "access": "public",
     "exports": {
-      "./services": "./lib/services.js"
+      "./services": {
+        "types": "./dist/services.d.ts",
+        "import": "./dist/services.js"
+      }
     }
   },
   "peerDependencies": {

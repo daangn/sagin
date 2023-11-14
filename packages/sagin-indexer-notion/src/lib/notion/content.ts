@@ -3,11 +3,11 @@ import {
   type BlockObjectResponse,
   type PartialBlockObjectResponse,
   type RichTextItemResponse,
-} from '@notionhq/client/build/src/api-endpoints';
+} from '@notionhq/client/build/src/api-endpoints.js';
 
-import { type MaybeLiteral } from '~/lib/utils';
+import { type MaybeLiteral } from '~/lib/utils.ts';
 
-import { baseUrl } from './url';
+import { baseUrl } from './url.ts';
 
 type ContentBlock = PartialBlockObjectResponse | BlockObjectResponse;
 

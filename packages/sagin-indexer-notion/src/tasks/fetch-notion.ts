@@ -1,12 +1,15 @@
 import * as Worker from 'graphile-worker';
-import notion, { blocksToMarkdown, interleaveFullContent } from '~/lib/notion';
-import { collectAsync } from '~/lib/utils';
 
-type Payload = {};
+import notion, { blocksToMarkdown, interleaveFullContent } from '~/lib/notion.ts';
+import { collectAsync } from '~/lib/utils.ts';
+
+type Payload = {
+  pageId: string;
+};
 
 export default async function fetchNotion(payload: Payload, helpers: Worker.Helpers) {
   console.log('start');
-  const blocks = await collectAsync(interleaveFullContent(notion, '6a32536d494b4530a6828358970491b1'));
+  const blocks = await collectAsync(interleaveFullContent(notion, payload.pageId));
   const text = blocksToMarkdown(blocks);
   console.log(text);
 }

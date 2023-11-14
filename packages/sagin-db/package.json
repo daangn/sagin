@@ -10,10 +10,22 @@
   "publishConfig": {
     "access": "public",
     "exports": {
-      ".": "./lib/index.js",
-      "./auth": "./lib/auth.js",
-      "./schema": "./lib/schema.js",
-      "./pool": "./lib/pool.js"
+      ".": {
+        "types": "./lib/index.d.ts",
+        "import": "./lib/index.js"
+      },
+      "./auth": {
+        "types": "./lib/auth.d.ts",
+        "import": "./lib/auth.js"
+      },
+      "./schema": {
+        "types": "./lib/schema.d.ts",
+        "import": "./lib/schema.js"
+      },
+      "./pool": {
+        "types": "./lib/pool.d.ts",
+        "import": "./lib/pool.js"
+      }
     }
   },
   "scripts": {
@@ -31,7 +43,6 @@
   "devDependencies": {
     "@types/pg": "^8.10.9",
     "drizzle-kit": "^0.20.2",
-    "typescript": "^5.2.2",
-    "vite": "beta"
+    "typescript": "^5.2.2"
   }
 }

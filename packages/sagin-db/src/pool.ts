@@ -14,6 +14,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 declare global {
-  // rome-ignore lint/style/noVar: intended
+  // biome-ignore lint/style/noVar: intended
   var __DB_POOL__: Pool;
 }

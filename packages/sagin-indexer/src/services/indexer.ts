@@ -1,6 +1,6 @@
-import { router } from './_base';
-import { sourceRouter } from './source';
-import { systemRouter } from './system';
+import { router } from './_base.ts';
+import { sourceRouter } from './source.ts';
+import { systemRouter } from './system.ts';
 
 export type IndexerRouter = typeof indexerRouter;
 export const indexerRouter = router({

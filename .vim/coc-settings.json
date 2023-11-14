@@ -1,6 +1,5 @@
 {
-  "eslint.enable": false,
-  "prettier.enable": false,
   "biome.enable": true,
-  "coc.preferences.formatOnSave": true
+  "coc.preferences.formatOnSave": true,
+  "tsserver.useLocalTsdk": true
 }

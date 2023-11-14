@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { publicProcedure, router } from './_base';
+import { publicProcedure, router } from './_base.ts';
 
 export interface SourceService {
   validateSourceId(id: string): Promise<boolean>;

@@ -1,4 +1,4 @@
-lib/
+dist/
 
 # temporarily ignored since this never been deployed yet
 migrations/

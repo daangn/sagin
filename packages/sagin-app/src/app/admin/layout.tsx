@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { Separator } from '~/components/ui/separator';
+import { Separator } from '~/components/ui/separator.tsx';
 
-import { type NavItem } from './_common';
-import SectionHeader from './_section-header';
-import SidebarNav from './_sidebar-nav';
+import { type NavItem } from './_common.ts';
+import SectionHeader from './_section-header.tsx';
+import SidebarNav from './_sidebar-nav.tsx';
 
 type Props = {
   children: React.ReactNode;

@@ -1,5 +1,5 @@
-import { type SourceService } from './source';
-import { type SystemService } from './system';
+import { type SourceService } from './source.ts';
+import { type SystemService } from './system.ts';
 
 export type RequiredServices = {
   system: SystemService;

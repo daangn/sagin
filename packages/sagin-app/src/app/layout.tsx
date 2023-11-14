@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
 import * as React from 'react';
 
-import { getCurrentUser } from '~/lib/auth';
+import { getCurrentUser } from '~/lib/auth.ts';
 
 import './_globals.css';
-import SessionProvider from './_session-provider';
-import SiteHeader from './_site-header';
-import ThemeProvider from './_theme-provider';
+import SessionProvider from './_session-provider.tsx';
+import SiteHeader from './_site-header.tsx';
+import ThemeProvider from './_theme-provider.tsx';
 
 type Props = {
   children: React.ReactNode;

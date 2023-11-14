@@ -1,13 +1,9 @@
-const { loadEnv } = require('vite');
-
-const env = loadEnv('development', process.cwd(), '');
-
 /** @type { import('drizzle-kit').Config } */
-module.exports = {
+export default {
   driver: 'pg',
   schema: './src/schema.ts',
   out: './migrations',
   dbCredentials: {
-    connectionString: env.DB_URL,
+    connectionString: process.env.DB_URL || 'postgres://sagin:sagin@0.0.0.0:5432/sagin',
   },
 };

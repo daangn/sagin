@@ -3,23 +3,21 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import closeWithGrace from 'close-with-grace';
 import Fastify from 'fastify';
 
-import { createContext } from './context';
-import { setupWorker } from './worker';
+import { createContext } from './context.ts';
+import { setupWorker } from './worker.ts';
 
 const app = Fastify({
   logger: true,
   maxParamLength: 5000, // tRPC uses URL params for queries
-});
-
-app.register(setupWorker);
-
-app.register(fastifyTRPCPlugin, {
-  prefix: '/api/trpc',
-  trpcOptions: {
-    router: indexerRouter,
-    createContext,
-  },
-});
+})
+  .register(setupWorker)
+  .register(fastifyTRPCPlugin, {
+    prefix: '/api/trpc',
+    trpcOptions: {
+      router: indexerRouter,
+      createContext,
+    },
+  });
 
 await app.ready();
 
