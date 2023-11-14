@@ -2198,9 +2198,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sagin/app@workspace:sagin-app":
+"@sagin/app@workspace:packages/sagin-app":
   version: 0.0.0-use.local
-  resolution: "@sagin/app@workspace:sagin-app"
+  resolution: "@sagin/app@workspace:packages/sagin-app"
   dependencies:
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@radix-ui/react-alert-dialog": "npm:^1.0.5"
@@ -2239,15 +2239,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sagin/core@workspace:^, @sagin/core@workspace:sagin-core":
+"@sagin/core@workspace:^, @sagin/core@workspace:packages/sagin-core":
   version: 0.0.0-use.local
-  resolution: "@sagin/core@workspace:sagin-core"
+  resolution: "@sagin/core@workspace:packages/sagin-core"
   languageName: unknown
   linkType: soft
 
-"@sagin/db@workspace:^, @sagin/db@workspace:sagin-db":
+"@sagin/db@workspace:^, @sagin/db@workspace:packages/sagin-db":
   version: 0.0.0-use.local
-  resolution: "@sagin/db@workspace:sagin-db"
+  resolution: "@sagin/db@workspace:packages/sagin-db"
   dependencies:
     "@auth/core": "npm:^0.18.1"
     "@paralleldrive/cuid2": "npm:^2.2.2"
@@ -2261,9 +2261,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sagin/indexer-notion@workspace:sagin-indexer-notion":
+"@sagin/indexer-notion@workspace:packages/sagin-indexer-notion":
   version: 0.0.0-use.local
-  resolution: "@sagin/indexer-notion@workspace:sagin-indexer-notion"
+  resolution: "@sagin/indexer-notion@workspace:packages/sagin-indexer-notion"
   dependencies:
     "@notionhq/client": "npm:^2.2.13"
     "@sagin/db": "workspace:^"
@@ -2285,9 +2285,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sagin/indexer@workspace:^, @sagin/indexer@workspace:sagin-indexer":
+"@sagin/indexer@workspace:^, @sagin/indexer@workspace:packages/sagin-indexer":
   version: 0.0.0-use.local
-  resolution: "@sagin/indexer@workspace:sagin-indexer"
+  resolution: "@sagin/indexer@workspace:packages/sagin-indexer"
   dependencies:
     "@trpc/server": "npm:^10.43.3"
     typescript: "npm:^5.2.2"

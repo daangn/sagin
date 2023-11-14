@@ -6,7 +6,7 @@
 
 ### Supported Sources
 
-- [x] Notion ([sagin-indexer-notion](sagin-indexer-notion))
+- [x] Notion ([sagin-indexer-notion](packages/sagin-indexer-notion))
 - [ ] Confluence (TBD)
 - [ ] Google Docs (TBD)
 - [ ] GitHub Wiki (TBD)

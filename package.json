@@ -2,11 +2,7 @@
   "name": "project",
   "private": true,
   "workspaces": [
-    "sagin-app",
-    "sagin-core",
-    "sagin-db",
-    "sagin-indexer",
-    "sagin-indexer-notion"
+    "packages/*"
   ],
   "scripts": {
     "format": "biome format --write ."
