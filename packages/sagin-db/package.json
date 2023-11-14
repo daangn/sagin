@@ -32,6 +32,6 @@
     "@types/pg": "^8.10.9",
     "drizzle-kit": "^0.20.2",
     "typescript": "^5.2.2",
-    "vite": "^4.5.0"
+    "vite": "beta"
   }
 }
