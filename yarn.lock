@@ -1940,7 +1940,6 @@ __metadata:
     drizzle-orm: "npm:^0.29.0"
     pg: "npm:^8.11.3"
     typescript: "npm:^5.2.2"
-    vite: "npm:beta"
   languageName: unknown
   linkType: soft
 
