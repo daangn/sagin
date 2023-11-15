@@ -2,7 +2,13 @@
 
 **Sagin (색인, [sæ-gin])** is a self-hosted, unified document search tool for a workplace.
 
-## Features
+## Feature Roadmap
+
+- One place for all documents
+- Fast keyword search
+- Similarity search & Summarization
+- Advanced filter by metadata
+- Knowledge graph by references
 
 ### Supported Sources
 
@@ -12,14 +18,12 @@
 - [ ] GitHub Wiki (TBD)
 - [ ] Custom
 
-NOTE: Sagin does not magically support federated search for those cloud services. Instead, the user should specify exactly where the document is stored, like a specific database (Notion), space (Coufluence), etc.
-
 ## Architecture
 
 ### Overview
 
 ```
-Sources (Notion, Confluence, etc)
+ Stores (Notion, Confluence, etc)
    ▲
    │
    │                  Database (Postgres)
@@ -32,19 +36,25 @@ Indexers ───────────► Search Engine (MeiliSearch or pgve
 
 ### Database
 
-Sagin is designed that all components can share a single Postgres instance. Even including search (if allow to use it as vector store)
+Sagin is designed that all components can share a single Postgres instance, except search.
 
 ### Search Engine
 
-Sagin uses [MeiliSearch](https://www.meilisearch.com/) by default to support regular full-text and AI search. (Expect it will eventually work as hybrid, [not yet supported](https://github.com/orgs/meilisearch/discussions/621))
+Sagin uses [MeiliSearch](https://www.meilisearch.com/) to support regular keyword search and AI search.
 
-If only AI search used, you can move vector store to [pgvector](https://github.com/pgvector/pgvector) for an simple infrastructure. A MeiliSearch adapter for this is currently under development.
+Sagin chose MeiliSearch because Karrot is a Korean company, and it was the only option that guaranteed meaningful quality for Korean out of the box. Others provide only a simple bi-gram tokenizer for Korean.
+
+MeiliSearch currently supports keyword search **OR** AI(vector) search, hybrid search is still [on roadmap](https://roadmap.meilisearch.com/c/141-hybrid-search). It's fine due to we use keyword search and AI search as separated features.
+
+It could move the search engine to Postgres and [pgvector](https://github.com/pgvector/pgvector) for even simpler deployment. A MeiliSearch adapter for this is currently under development.
+
+It could also move the keyword search to a more solid BM25 engine such as [Tantivy](https://github.com/quickwit-oss/tantivy), or a standalone vector store that supports hybrid search in the future. This will be determined after sufficient production testing.
 
 ### Indexers
 
-Indexers are background workers that crawl content from sources, sync it with search indexes.
+Indexers are background workers that crawl content from stores, and sync it with search indexes.
 
-Typically, one indexer is configured for one target API with authorization.
+Typically, one indexer is configured for one store API with an authority. Configuring multiple indexers for the same store is not recommended for reasons such as rate limiting on the endpoint.
 
 ```
   Notion    Confluence    GitHub
@@ -59,7 +69,9 @@ Typically, one indexer is configured for one target API with authorization.
               Database
 ```
 
-Configuring multiple indexers for the same target is not recommended for reasons such as rate limit on the endpoint.
+A "Store" refers to the service where the actual documents are produced. A "Source" is a specific locator among it.
+
+When an admin user registers a source, an actual index is created and a task of synchronizing documents is registered. That is, one indexer manages multiple indexes.
 
 ## LICENSE
 
