@@ -4,9 +4,10 @@
 
 ## Feature Roadmap
 
-- One place for all documents
-- Fast keyword search
+- One place for searching all documents
+- Fast keyword search & full-text search
 - Similarity search & Summarization
+- Safe AI integration with data protection policy
 - Advanced filter by metadata
 - Knowledge graph by references
 
@@ -72,6 +73,10 @@ Typically, one indexer is configured for one store API with an authority. Config
 A "Store" refers to the service where the actual documents are produced. A "Source" is a specific locator among it.
 
 When an admin user registers a source, an actual index is created and a task of synchronizing documents is registered. That is, one indexer manages multiple indexes.
+
+### Data Protection Policy
+
+Sagin could send data to OpenAI to request text embeddings. To protect sensitive documents, users can disable it by specifying data protection policy at indexer, source, and document level. If any of these scope are specified as protected, they will not be sent externally.
 
 ## LICENSE
 
