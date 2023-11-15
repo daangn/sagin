@@ -5,6 +5,7 @@
     "quickfix.biome": true,
     "source.organizeImports.biome": true
   },
+  "typescript.tsdk": "node_modules/typescript/lib",
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
