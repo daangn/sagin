@@ -15,5 +15,4 @@ biome-socket-*
 initdb.d/
 
 *.tsbuildinfo
-
-*.ssession.sql
+*.session.sql

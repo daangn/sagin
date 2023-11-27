@@ -2,26 +2,43 @@ version: "3.9"
 
 services:
   postgres:
-    image: postgres:15.3-alpine
+    image: paradedb/paradedb:latest
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: sagin
       POSTGRES_PASSWORD: sagin
+      POSTGRES_DB: sagin
+      TELEMETRY: "false"
     volumes:
       - ./initdb.d:/docker-entrypoint-initdb.d:ro
       - postgres:/var/lib/postgresql/data:rw
 
   meili:
-    image: getmeili/meilisearch:v1.3
+    image: getmeili/meilisearch:latest
     ports:
       - 7700:7700
     environment:
       MEILI_ENV: development
       MEILI_MASTER_KEY: sagin
+      MEILI_NO_ANALYTICS: "true"
     volumes:
       - meili:/meili_data:rw
+
+  memgraph:
+    image: memgraph/memgraph-platform:latest
+    ports:
+      - 7687:7687
+      - 7444:7444
+      - 4000:3000
+    volumes:
+      - mg_lib:/var/lib/memgraph
+      - mg_log:/var/log/memgraph
+      - mg_etc:/etc/memgraph
 
 volumes:
   postgres:
   meili:
+  mg_lib:
+  mg_log:
+  mg_etc:

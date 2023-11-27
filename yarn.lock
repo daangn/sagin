@@ -351,6 +351,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.18.3":
+  version: 7.23.4
+  resolution: "@babel/runtime@npm:7.23.4"
+  dependencies:
+    regenerator-runtime: "npm:^0.14.0"
+  checksum: db2bf183cd0119599b903ca51ca0aeea8e0ab478a16be1aae10dd90473ed614159d3e5adfdd8f8f3d840402428ce0d90b5c01aae95da9e45a2dd83e02d85ca27
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.22.5":
   version: 7.22.5
   resolution: "@babel/template@npm:7.22.5"
@@ -746,6 +755,16 @@ __metadata:
   dependencies:
     fast-json-stringify: "npm:^5.7.0"
   checksum: 513ef296f5ed682f7a460cfa6c5fb917a32fc540111b873c9937f944558e021492b18f30f9fd8dd20db252381a4428adbcc9f03a077f16c86d02f081eb490c7b
+  languageName: node
+  linkType: hard
+
+"@fastify/type-provider-json-schema-to-ts@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "@fastify/type-provider-json-schema-to-ts@npm:2.2.2"
+  peerDependencies:
+    fastify: ^4.0.0
+    json-schema-to-ts: ^2.0.0
+  checksum: 90da7d75bd96b85a2e9567db0967a2390bb750144d590bb06cbeb8c2ccd5d731b35cdcf3bc12dacc4c1e44e1eea9e3f46666d3d65c6a2b66dd964bdf8cc6230c
   languageName: node
   linkType: hard
 
@@ -1895,6 +1914,7 @@ __metadata:
     "@sagin/core": "workspace:^"
     "@sagin/db": "workspace:^"
     "@sagin/indexer": "workspace:^"
+    "@tanstack/react-table": "npm:^8.10.7"
     "@trpc/client": "npm:^10.43.3"
     "@trpc/server": "npm:^10.43.3"
     "@types/node": "npm:^20.9.0"
@@ -1936,10 +1956,13 @@ __metadata:
     "@paralleldrive/cuid2": "npm:^2.2.2"
     "@sagin/core": "workspace:^"
     "@types/pg": "npm:^8.10.9"
+    drizzle-dbml-generator: "npm:^0.5.0"
     drizzle-kit: "npm:^0.20.2"
     drizzle-orm: "npm:^0.29.0"
     pg: "npm:^8.11.3"
     typescript: "npm:^5.2.2"
+    vite: "npm:^5.0.2"
+    vite-node: "npm:0.34.6"
   languageName: unknown
   linkType: soft
 
@@ -1947,6 +1970,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sagin/indexer-notion@workspace:packages/sagin-indexer-notion"
   dependencies:
+    "@fastify/type-provider-json-schema-to-ts": "npm:^2.2.2"
     "@notionhq/client": "npm:^2.2.13"
     "@sagin/db": "workspace:^"
     "@sagin/indexer": "workspace:^"
@@ -1956,6 +1980,7 @@ __metadata:
     drizzle-orm: "npm:^0.29.0"
     fastify: "npm:^4.24.3"
     graphile-worker: "npm:^0.15.1"
+    json-schema-to-ts: "npm:^2.9.2"
     meilisearch: "npm:^0.35.0"
     typescript: "npm:^5.2.2"
     vite: "npm:beta"
@@ -1972,6 +1997,7 @@ __metadata:
   resolution: "@sagin/indexer@workspace:packages/sagin-indexer"
   dependencies:
     "@trpc/server": "npm:^10.43.3"
+    json-schema-to-ts: "npm:^2.9.2"
     typescript: "npm:^5.2.2"
     zod: "npm:^3.22.4"
   peerDependencies:
@@ -1996,6 +2022,25 @@ __metadata:
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: b6fa49bcf6c00571d0eb7837b163f8609960d4d77538160585e27ed167361e9776bd6e5eb9646ffac2fb4d43c58df9ca50dab9d96ab097e6591bc82a75fd1164
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-table@npm:^8.10.7":
+  version: 8.10.7
+  resolution: "@tanstack/react-table@npm:8.10.7"
+  dependencies:
+    "@tanstack/table-core": "npm:8.10.7"
+  peerDependencies:
+    react: ">=16"
+    react-dom: ">=16"
+  checksum: 2ddf6f90b06e7af069f16dbe5d0dc8c8afab3de88c25e33f6c297beaf2507c2e46fee1f746f7977d48bad2114909bba0016026fc2b6a85bcaee472cdafdc7ffd
+  languageName: node
+  linkType: hard
+
+"@tanstack/table-core@npm:8.10.7":
+  version: 8.10.7
+  resolution: "@tanstack/table-core@npm:8.10.7"
+  checksum: 3f671484319094443bb2db86356f408d4246e22bebd7ad444edc919fef131899384c3a27261c5ee01fb18887bc9157c5a0d9db3e32aae940ce5416f6e58b038b
   languageName: node
   linkType: hard
 
@@ -2056,6 +2101,13 @@ __metadata:
   dependencies:
     "@types/ms": "npm:*"
   checksum: 913aea60b8c94cd0009bbdd531d8a3594ec3275ca0e8d1cbcf783417884252b3c53113f6665fd2fb0076b8ce628ee12cd083d2af107ed26c0f2e75852d8bc074
+  languageName: node
+  linkType: hard
+
+"@types/json-schema@npm:^7.0.9":
+  version: 7.0.15
+  resolution: "@types/json-schema@npm:7.0.15"
+  checksum: a996a745e6c5d60292f36731dd41341339d4eeed8180bb09226e5c8d23759067692b1d88e5d91d72ee83dfc00d3aca8e7bd43ea120516c17922cbcb7c3e252db
   languageName: node
   linkType: hard
 
@@ -3168,6 +3220,15 @@ __metadata:
   dependencies:
     wordwrap: "npm:>=0.0.2"
   checksum: 8e5953c19519c9ec9427eff91b618c3ded7d2b50fcb89c051ca9c4f49e712460103c12dea09eb3feec5a63f21950488a19481798425aaba815b1c5016b3d58b9
+  languageName: node
+  linkType: hard
+
+"drizzle-dbml-generator@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "drizzle-dbml-generator@npm:0.5.0"
+  dependencies:
+    drizzle-orm: "npm:^0.29.0"
+  checksum: 9949bf6010520e8129f0ab12db6603c41fc7392d7e0a10f5cab03b8ec1eeaa05fe28ecf074b0001e08f3410467f753d5015448f1138fb791f50078f70384fb5e
   languageName: node
   linkType: hard
 
@@ -4460,6 +4521,17 @@ __metadata:
   dependencies:
     fast-deep-equal: "npm:^3.1.3"
   checksum: aa89d88108c0109ae35b913c89c132fb50c00f3b99fc8a8309b524b9e3a6a77414f19a6a35a1253871462984cbabc74279ebbd9bf103c6629fb7b37c9fb59bcf
+  languageName: node
+  linkType: hard
+
+"json-schema-to-ts@npm:^2.9.2":
+  version: 2.9.2
+  resolution: "json-schema-to-ts@npm:2.9.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.18.3"
+    "@types/json-schema": "npm:^7.0.9"
+    ts-algebra: "npm:^1.2.0"
+  checksum: e6e5258ebc4a2c13d013c2e423140ec0fbbe4af0706b574a2d63672f9d8619e32fa7fb9771aa43d55b83890a6e3234976f98f990c606bf2bbc24bb4b08dfd676
   languageName: node
   linkType: hard
 
@@ -6863,6 +6935,13 @@ __metadata:
   version: 0.0.3
   resolution: "tr46@npm:0.0.3"
   checksum: 047cb209a6b60c742f05c9d3ace8fa510bff609995c129a37ace03476a9b12db4dbf975e74600830ef0796e18882b2381fb5fb1f6b4f96b832c374de3ab91a11
+  languageName: node
+  linkType: hard
+
+"ts-algebra@npm:^1.2.0":
+  version: 1.2.2
+  resolution: "ts-algebra@npm:1.2.2"
+  checksum: dabfb7fad18b3bb56ed6b14404c2d9d7d41f181df599d50ad6643c6ff1afc459524969d80898183f9e5c66378163799991bfac799790899034ae8cfc99904c74
   languageName: node
   linkType: hard
 

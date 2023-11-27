@@ -27,9 +27,10 @@
  Stores (Notion, Confluence, etc)
    ▲
    │
-   │                  Database (Postgres)
-Indexers ───────────► Search Engine (MeiliSearch or pgvector)
-   ▲                           ▲
+   │                    Metadata / Entities (Postgres)
+Indexers ────────────►  Search Indexes      (Postgres or MeiliSearch)
+   ▲                    Knowledge Graph     (Postgres or Neo4j)
+   │                           ▲
    │                           │
    │                           │
   App (UI, System Admin)───────┘
@@ -37,19 +38,45 @@ Indexers ───────────► Search Engine (MeiliSearch or pgve
 
 ### Database
 
-Sagin is designed that all components can share a single Postgres instance, except search.
+Sagin is designed so all components can share a single Postgres instance as it is possible.
 
-### Search Engine
+- Job queue by [Graphile Worker](https://worker.graphile.org/)
+- Keyword search & similarity search by [ParadeDB](https://www.paradedb.com/)
+- Graph queries & page rank by [Apache AGE](https://age.apache.org/)
 
-Sagin uses [MeiliSearch](https://www.meilisearch.com/) to support regular keyword search and AI search.
+This is possible thanks to Postgres' capable extension system. However, this may be difficult to use for some reasons, like organization policies using managed Postgres or for instance scale. Sagin tries to provide several options.
 
-Sagin chose MeiliSearch because Karrot is a Korean company, and it was the only option that guaranteed meaningful quality for Korean out of the box. Others provide only a simple bi-gram tokenizer for Korean.
+### Search Indexes
 
-MeiliSearch currently supports keyword search **OR** AI(vector) search, hybrid search is still [on roadmap](https://roadmap.meilisearch.com/c/141-hybrid-search). It's fine due to we use keyword search and AI search as separated features.
+Sagin indexers maintain search indexes for documents, powered by [ParadeDB](https://www.paradedb.com/) or [MeiliSearch](https://meilisearch.com) (maybe adding [OpenSearch](https://opensearch.org/) later)
 
-It could move the search engine to Postgres and [pgvector](https://github.com/pgvector/pgvector) for even simpler deployment. A MeiliSearch adapter for this is currently under development.
+<details>
+  <summary>Why ParadeDB?</summary>
 
-It could also move the keyword search to a more solid BM25 engine such as [Tantivy](https://github.com/quickwit-oss/tantivy), or a standalone vector store that supports hybrid search in the future. This will be determined after sufficient production testing.
+  Sagin uses [ParadeDB](https://www.paradedb.com/) becuase not only it is a Postgres extension, but also it provides amazing features set.
+
+  ParadeDB is based on [Tantivy](https://github.com/quickwit-oss/tantivy), implementing accurate BM25 search. Faster searches with fewer resources than ElasticSearch.
+
+  Queries fully customizable with [BM25/HNSW hybrid scores](https://docs.paradedb.com/search/hybrid) and [ParadeQL](https://docs.paradedb.com/search/bm25#paradeql)
+
+  One concern is that it is still very early, but there are already enough features and very active development. They responded to our requirements for a [Korean tokenizer just in one day](https://github.com/paradedb/paradedb/pull/567).
+
+</details>
+
+<details>
+  <summary>Why MeiliSearch?</summary>
+
+   Sagin uses [MeiliSearch](https://meilisearch.com) because Karrot is a Korean company, and it was the only option that guaranteed meaningful quality for Korean out of the box. Others provide only a simple bi-gram tokenizer for Korean.
+
+   MeiliSearch currently supports keyword search **OR** similarity search, hybrid search is still [on roadmap](https://roadmap.meilisearch.com/c/141-hybrid-search). It's fine due to we use keyword search and AI search as separated features yet.
+
+   Also MeiliSearch is licenced under MIT
+
+</details>
+
+### Knowledge Graph
+
+TBD
 
 ### Indexers
 

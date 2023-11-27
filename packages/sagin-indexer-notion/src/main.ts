@@ -1,23 +1,16 @@
-import { indexerRouter } from '@sagin/indexer/services';
-import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import closeWithGrace from 'close-with-grace';
 import Fastify from 'fastify';
 
-import { createContext } from './context.ts';
+import { setupTrpc } from './api.ts';
 import { setupWorker } from './worker.ts';
 
 const app = Fastify({
   logger: true,
   maxParamLength: 5000, // tRPC uses URL params for queries
-})
-  .register(setupWorker)
-  .register(fastifyTRPCPlugin, {
-    prefix: '/api/trpc',
-    trpcOptions: {
-      router: indexerRouter,
-      createContext,
-    },
-  });
+});
+
+app.register(setupTrpc);
+app.register(setupWorker);
 
 await app.ready();
 

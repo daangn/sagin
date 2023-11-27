@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "properties": {
+    "protocols": {
+      "type": "array",
+      "description": "Supported protocol by the implementation, client would connect via first entity of this array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["trpc"]
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "implementation": {
+            "type": "string"
+          }
+        },
+        "required": ["type", "endpoint", "implementation"],
+        "additionalProperties": false
+      },
+      "minLength": 1
+    }
+  },
+  "required": ["protocols"],
+  "additionalProperties": false
+}

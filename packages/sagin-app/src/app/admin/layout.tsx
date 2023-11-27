@@ -16,12 +16,12 @@ const navItems: NavItem[] = [
     path: '/admin/sources',
   },
   {
-    title: 'Users',
-    path: '/admin/users',
-  },
-  {
     title: 'Indexers',
     path: '/admin/indexers',
+  },
+  {
+    title: 'Users',
+    path: '/admin/users',
   },
 ];
 

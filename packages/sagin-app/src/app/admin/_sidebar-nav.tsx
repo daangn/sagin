@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
-import { buttonVariants } from '~/components/ui/button.ts';
+import { buttonVariants } from '~/components/ui/button.tsx';
 import { cn } from '~/lib/utils.ts';
 
 import { type NavItem } from './_common.ts';

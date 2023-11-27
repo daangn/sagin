@@ -1,29 +1,73 @@
-import { type Adapter, type AdapterAccount } from '@auth/core/adapters';
+import { type Adapter, type AdapterAccount, type AdapterUser } from '@auth/core/adapters';
 import { createId } from '@paralleldrive/cuid2';
 import { Role } from '@sagin/core/models';
 import { and, eq } from 'drizzle-orm';
 import { type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 import * as schema from './schema.ts';
+import { SystemStats } from './system-stats.ts';
 
-export function createAdapter(db: PostgresJsDatabase<typeof schema>): Adapter {
+export type AdapterOptions = {
+  signupPolicy: SignupPolicy;
+};
+
+const defaultOptions: Readonly<AdapterOptions> = Object.freeze({
+  signupPolicy: { type: 'restricted', allowedDomains: [] },
+});
+
+export function createAdapter(db: PostgresJsDatabase<typeof schema>, { signupPolicy } = defaultOptions): Adapter {
   return {
     async createUser(data) {
-      const anyUser = await db.query.users.findFirst({ columns: { id: true } });
-      const shouldBeAdmin = !anyUser;
+      const initiatedBy = await db.query.systemStats.findFirst({
+        columns: { value: true },
+        where: (table, { and, eq }) =>
+          and(eq(table.category, SystemStats.InitiatedBy.category), eq(table.key, SystemStats.InitiatedBy.key)),
+      });
+      const shouldInitiate = !initiatedBy;
+      const now = new Date();
 
-      const record: schema.InsertUser = {
-        ...data,
-        id: createId(),
-        role: shouldBeAdmin ? Role.SYS_ADMIN : Role.USER,
-        activatedAt: shouldBeAdmin ? new Date() : null,
-      };
+      let newUser: schema.InsertUser;
+      // initiating user will automatically be system admin
+      if (shouldInitiate) {
+        newUser = {
+          ...data,
+          id: createId(),
+          role: Role.SYS_ADMIN,
+          approvedAt: now,
+        };
+      } else if (signupPolicy.type === 'restricted') {
+        newUser = {
+          ...data,
+          id: createId(),
+          role: Role.USER,
+          approvedAt: shouldApproved(data, signupPolicy.allowedDomains) ? now : null,
+        };
+      } else {
+        newUser = {
+          ...data,
+          id: createId(),
+          role: Role.USER,
+          approvedAt: now,
+        };
+      }
 
-      const result = await db
-        .insert(schema.users)
-        .values(record)
-        .returning()
-        .then(res => res[0] ?? null);
+      const result = await db.transaction(async tx => {
+        const result = await tx
+          .insert(schema.users)
+          .values(newUser)
+          .returning()
+          .then(res => res[0] ?? null);
+        if (shouldInitiate) {
+          await tx.insert(schema.systemStats).values({
+            ...SystemStats.InitiatedBy,
+            value: {
+              user_id: newUser.id,
+            },
+          });
+        }
+        return result;
+      });
+
       return result;
     },
     async getUser(data) {
@@ -100,6 +144,9 @@ export function createAdapter(db: PostgresJsDatabase<typeof schema>): Adapter {
         scope: updatedAccount.scope ?? undefined,
         expires_at: updatedAccount.expiresAt ?? undefined,
         session_state: updatedAccount.sessionState ?? undefined,
+
+        // ignored payload
+        createdAt: undefined,
       };
       return account;
     },
@@ -174,4 +221,15 @@ export function createAdapter(db: PostgresJsDatabase<typeof schema>): Adapter {
       return { provider, type, providerAccountId, userId };
     },
   };
+}
+
+type SignupPolicy = { type: 'open' } | { type: 'restricted'; allowedDomains: string[] };
+
+function shouldApproved(user: Pick<AdapterUser, 'email' | 'emailVerified'>, allowedDomains: string[]) {
+  if (!user.emailVerified) {
+    return false;
+  }
+
+  const [, domain] = user.email.split('@');
+  return allowedDomains.some(allowedDomain => domain === allowedDomain);
 }

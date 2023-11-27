@@ -20,6 +20,7 @@
     "@sagin/core": "workspace:^",
     "@sagin/db": "workspace:^",
     "@sagin/indexer": "workspace:^",
+    "@tanstack/react-table": "^8.10.7",
     "@trpc/client": "^10.43.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",

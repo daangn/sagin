@@ -5,14 +5,22 @@
     "build": "vite build"
   },
   "exports": {
-    "./services": "./src/services.ts"
+    "./schema/*.json": "./src/schema/*.json",
+    "./schema/*.ts": "./src/schema/*.ts",
+    "./services": "./src/services.ts",
+    "./api/trpc": "./src/api/trpc.ts"
   },
   "publishConfig": {
     "access": "public",
     "exports": {
+      "./schema/*.json": "./dist/schema/*.json",
       "./services": {
         "types": "./dist/services.d.ts",
         "import": "./dist/services.js"
+      },
+      "./api/trpc": {
+        "types": "./dist/api/trpc.d.ts",
+        "import": "./dist/api/trpc.js"
       }
     }
   },
@@ -27,6 +35,7 @@
   },
   "devDependencies": {
     "@trpc/server": "^10.43.3",
+    "json-schema-to-ts": "^2.9.2",
     "typescript": "^5.2.2",
     "zod": "^3.22.4"
   }

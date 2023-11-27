@@ -29,7 +29,7 @@
     }
   },
   "scripts": {
-    "generate": "drizzle-kit generate:pg",
+    "generate": "drizzle-kit generate:pg && vite-node scripts/generate-dbml.ts",
     "push": "drizzle-kit push:pg",
     "studio": "drizzle-kit studio"
   },
@@ -42,7 +42,10 @@
   },
   "devDependencies": {
     "@types/pg": "^8.10.9",
+    "drizzle-dbml-generator": "^0.5.0",
     "drizzle-kit": "^0.20.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vite": "^5.0.2",
+    "vite-node": "0.34.6"
   }
 }

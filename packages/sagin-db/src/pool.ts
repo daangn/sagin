@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 
 export let pool: Pool;
 if (process.env.NODE_ENV === 'development') {
+  // persist db connection for HMR
   pool =
     global.__DB_POOL__ ||
     new Pool({
