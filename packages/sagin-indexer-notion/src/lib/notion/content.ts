@@ -30,11 +30,17 @@ export async function* interleaveFullContent(
 ): AsyncGenerator<ContentBlock & Level, IterateFullContentResult> {
   let count = 0;
 
-  for await (const childBlock of iteratePaginatedAPI(client.blocks.children.list, { block_id: pageId })) {
+  for await (const childBlock of iteratePaginatedAPI(client.blocks.children.list, {
+    block_id: pageId,
+  })) {
     if (isFullBlock(childBlock) && childBlock.has_children) {
       yield { ...childBlock, level };
       // interleaving children to make full content to be flatten
-      if (childBlock.type === 'heading_1' || childBlock.type === 'heading_2' || childBlock.type === 'heading_3') {
+      if (
+        childBlock.type === 'heading_1' ||
+        childBlock.type === 'heading_2' ||
+        childBlock.type === 'heading_3'
+      ) {
         // reset indentation by heading
         yield* interleaveFullContent(client, childBlock.id, 0);
       } else {
@@ -65,7 +71,11 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
     if (isFullBlock(block)) {
       // detect end of group
       if (block.type !== prevType) {
-        if (prevType === 'bulleted_list_item' || prevType === 'numbered_list_item' || prevType === 'to_do') {
+        if (
+          prevType === 'bulleted_list_item' ||
+          prevType === 'numbered_list_item' ||
+          prevType === 'to_do'
+        ) {
           // end list group
           content += '\n';
         }
@@ -78,17 +88,23 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
 
       switch (block.type) {
         case 'heading_1': {
-          content += `# ${block.heading_1.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)}`;
+          content += `# ${block.heading_1.rich_text
+            .map(richTextToMarkdown)
+            .reduce(mergeMarkdownInline)}`;
           content += '\n\n';
           break;
         }
         case 'heading_2': {
-          content += `## ${block.heading_2.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)}`;
+          content += `## ${block.heading_2.rich_text
+            .map(richTextToMarkdown)
+            .reduce(mergeMarkdownInline)}`;
           content += '\n\n';
           break;
         }
         case 'heading_3': {
-          content += `### ${block.heading_3.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)}`;
+          content += `### ${block.heading_3.rich_text
+            .map(richTextToMarkdown)
+            .reduce(mergeMarkdownInline)}`;
           content += '\n\n';
           break;
         }
@@ -106,7 +122,9 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
           if (block.bulleted_list_item.rich_text.length > 0) {
             content += indent(
               block.level,
-              `- ${block.bulleted_list_item.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)}`,
+              `- ${block.bulleted_list_item.rich_text
+                .map(richTextToMarkdown)
+                .reduce(mergeMarkdownInline)}`,
             );
             content += '\n';
           }
@@ -116,7 +134,9 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
           if (block.numbered_list_item.rich_text.length > 0) {
             content += indent(
               block.level,
-              `1. ${block.numbered_list_item.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)},
+              `1. ${block.numbered_list_item.rich_text
+                .map(richTextToMarkdown)
+                .reduce(mergeMarkdownInline)},
           `,
             );
             content += '\n';
@@ -128,7 +148,9 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
             const mark = block.to_do.checked ? 'x' : ' ';
             content += indent(
               block.level,
-              `- [${mark}] ${block.to_do.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)}`,
+              `- [${mark}] ${block.to_do.rich_text
+                .map(richTextToMarkdown)
+                .reduce(mergeMarkdownInline)}`,
             );
             content += '\n';
           }
@@ -148,7 +170,10 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
           if (block.callout.rich_text.length > 0) {
             content += indent(
               block.level,
-              htmlWrap('aside', block.callout.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline)),
+              htmlWrap(
+                'aside',
+                block.callout.rich_text.map(richTextToMarkdown).reduce(mergeMarkdownInline),
+              ),
             );
             content += '\n\n';
           }
@@ -173,7 +198,10 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
           code += '```';
           if (block.code.caption.length > 0) {
             code += '\n\n';
-            code += htmlWrap('figcaption', block.code.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline));
+            code += htmlWrap(
+              'figcaption',
+              block.code.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline),
+            );
           }
           content += indent(block.level, htmlWrap('figure', code));
           content += '\n\n';
@@ -207,7 +235,10 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
             let img = `![](${url})`; // there is no alt, only caption
             if (block.image.caption.length > 0) {
               img += '\n\n';
-              img += htmlWrap('figcaption', block.image.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline));
+              img += htmlWrap(
+                'figcaption',
+                block.image.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline),
+              );
             }
             content += indent(block.level, htmlWrap('figure', img));
             content += '\n\n';
@@ -217,7 +248,8 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
         case 'file': {
           const url = block.file.type === 'file' ? block.file.file.url : block.file.external.url;
           if (url) {
-            const caption = block.file.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline) || 'file';
+            const caption =
+              block.file.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline) || 'file';
             content += indent(block.level, `[${caption}](${url})`);
             content += '\n\n';
           }
@@ -226,7 +258,8 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
         case 'pdf': {
           const url = block.pdf.type === 'file' ? block.pdf.file.url : block.pdf.external.url;
           if (url) {
-            const caption = block.pdf.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline) || 'pdf';
+            const caption =
+              block.pdf.caption.map(richTextToMarkdown).reduce(mergeMarkdownInline) || 'pdf';
             content += indent(block.level, `[${caption}](${url})`);
             content += '\n\n';
           }
@@ -270,7 +303,11 @@ export function blocksToMarkdown(blocks: Array<ContentBlock & Level>): string {
 }
 
 function richTextToMarkdown(richText: RichTextItemResponse): string {
-  function formatText(text: string, annotations: RichTextItemResponse['annotations'], url: URL | string | null = null) {
+  function formatText(
+    text: string,
+    annotations: RichTextItemResponse['annotations'],
+    url: URL | string | null = null,
+  ) {
     let formatted = text;
     if (url) {
       formatted = `[${formatted}](${url.toString()})`;

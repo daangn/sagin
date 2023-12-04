@@ -10,9 +10,9 @@
   },
   "formatter": {
     "enabled": true,
-    "indentSize": 2,
+    "indentWidth": 2,
     "indentStyle": "space",
-    "lineWidth": 120
+    "lineWidth": 100
   },
   "linter": {
     "enabled": true,
@@ -31,6 +31,7 @@
   },
   "files": {
     "ignore": [
+      "packages/sagin-app/src/lib/ui/*",
       "**/.next/**",
       "*.json"
     ]

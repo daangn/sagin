@@ -8,5 +8,5 @@ type LocatorValidity =
     };
 
 export interface SourceService {
-  validateSourceLocator(sourceType: string, sourceLocator: string): Promise<LocatorValidity>;
+  validateLocator(sourceType: string, sourceLocator: string): Promise<LocatorValidity>;
 }

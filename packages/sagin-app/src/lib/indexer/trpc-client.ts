@@ -1,5 +1,9 @@
 import { type IndexerRouter } from '@sagin/indexer/api/trpc';
-import { type CreateTRPCProxyClient, createTRPCProxyClient, unstable_httpBatchStreamLink } from '@trpc/client';
+import {
+  type CreateTRPCProxyClient,
+  createTRPCProxyClient,
+  unstable_httpBatchStreamLink,
+} from '@trpc/client';
 
 export type TrpcClient = CreateTRPCProxyClient<IndexerRouter>;
 

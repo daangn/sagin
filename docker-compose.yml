@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: paradedb/paradedb:latest
@@ -32,9 +30,28 @@ services:
       - 7444:7444
       - 4000:3000
     volumes:
-      - mg_lib:/var/lib/memgraph
-      - mg_log:/var/log/memgraph
-      - mg_etc:/etc/memgraph
+      - mg_lib:/var/lib/memgraph:rw
+      - mg_log:/var/log/memgraph:rw
+      - mg_etc:/etc/memgraph:ro
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - 9411:9411
+
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml:ro
+    ports:
+      - "1888:1888"   # pprof extension
+      - "13133:13133" # health_check extension
+      - "55679:55679" # zpages extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+    depends_on:
+      - zipkin
 
 volumes:
   postgres:

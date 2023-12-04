@@ -1,9 +1,10 @@
 import { type AdapterAccount } from '@auth/core/adapters';
+import { type Role, type UserMembershipStatus } from '@sagin/core/models';
 import { relations } from 'drizzle-orm';
 import { index, integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
 
-export const systemStats = pgTable(
-  'system_stats',
+export const systemState = pgTable(
+  'system_state',
   {
     category: text('category').notNull(),
     key: text('key').notNull(),
@@ -14,21 +15,8 @@ export const systemStats = pgTable(
     categoryIdx: index('category_idx').on(table.category),
   }),
 );
-export type SelectSystemStat = typeof systemStats.$inferSelect;
-export type InsertSystemStat = typeof systemStats.$inferInsert;
-
-export const systemConfigs = pgTable(
-  'system_configs',
-  {
-    category: text('category').notNull(),
-    key: text('key').notNull(),
-    value: jsonb('value').notNull(),
-  },
-  table => ({
-    pk: primaryKey({ columns: [table.category, table.key] }),
-    categoryIdx: index('category_idx').on(table.category),
-  }),
-);
+export type SelectSystemState = typeof systemState.$inferSelect;
+export type InsertSystemState = typeof systemState.$inferInsert;
 
 export const users = pgTable(
   'users',
@@ -38,14 +26,20 @@ export const users = pgTable(
     email: text('email').notNull().unique(),
     emailVerified: timestamp('email_verified', { mode: 'date' }),
     image: text('image'),
-    role: text('role').notNull(),
+    role: text('role').$type<Role>().notNull(),
+    preferredLanguage: text('preferred_language'),
+    preferredTimeZone: text('preferred_timezone'),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-    approvedAt: timestamp('approved_at', { mode: 'date' }),
-    rejectedAt: timestamp('rejected_at', { mode: 'date' }),
-    deactivatedAt: timestamp('deactivated_at', { mode: 'date' }),
+
+    // always require to validate membership status
+    membershipStatus: text('membership_status').$type<UserMembershipStatus>().notNull(),
+    membershipAcceptedAt: timestamp('membership_accepted_at', { mode: 'date' }),
+    membershipDecliedAt: timestamp('membership_declied_at', { mode: 'date' }),
+    membershipDeactivatedAt: timestamp('membership_deactivated_at', { mode: 'date' }),
   },
   table => ({
-    cursor: index('cursor').on(table.createdAt),
+    cursor: index('cursor').on(table.membershipStatus, table.email),
+    membership: index('member_status').on(table.membershipStatus),
   }),
 );
 export const usersRelations = relations(users, ({ many }) => ({
@@ -76,7 +70,6 @@ export const accounts = pgTable(
   },
   table => ({
     pk: primaryKey({ columns: [table.provider, table.providerAccountId] }),
-    cursor: index('cursor').on(table.createdAt),
   }),
 );
 export type SelectAccount = typeof accounts.$inferSelect;
@@ -110,33 +103,43 @@ export const verificationTokens = pgTable(
   }),
 );
 
-export const indexers = pgTable('indexers', {
-  id: text('id').primaryKey(),
-  indexerType: text('indexer_type').notNull(),
-  indexerMeta: jsonb('indexer_meta').notNull(),
-  name: text('name').notNull(),
-  endpoint: text('endpoint').notNull(),
-  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-  dataProtectionPolicy: text('data_protection_policy'),
-});
+export const indexers = pgTable(
+  'indexers',
+  {
+    id: text('id').primaryKey(),
+    indexerMeta: jsonb('indexer_meta').notNull(),
+    name: text('name').notNull(),
+    endpoint: text('endpoint').notNull(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    dataProtectionPolicy: text('data_protection_policy'),
+  },
+  table => ({
+    cursor: index('cursor').on(table.createdAt),
+  }),
+);
 export const indexersRelations = relations(indexers, ({ many }) => ({
   sources: many(sources),
 }));
 export type SelectIndexer = typeof indexers.$inferSelect;
 export type InsertIndexer = typeof indexers.$inferInsert;
 
-export const sources = pgTable('sources', {
-  id: text('id').primaryKey(),
-  sourceType: text('source_type').notNull(),
-  sourceMeta: jsonb('source_meta').notNull(),
-  indexerId: text('indexer_id')
-    .notNull()
-    .references(() => indexers.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-  indexKey: text('index_key').notNull().unique(),
-  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-  fetchedAt: timestamp('fetched_at', { mode: 'date' }),
-  dataProtectionPolicy: text('data_protection_policy'),
-});
+export const sources = pgTable(
+  'sources',
+  {
+    id: text('id').primaryKey(),
+    sourceMeta: jsonb('source_meta').notNull(),
+    indexerId: text('indexer_id')
+      .notNull()
+      .references(() => indexers.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
+    indexKey: text('index_key').notNull().unique(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    fetchedAt: timestamp('fetched_at', { mode: 'date' }),
+    dataProtectionPolicy: text('data_protection_policy'),
+  },
+  table => ({
+    cursor: index('cursor').on(table.createdAt),
+  }),
+);
 export const sourcesRelations = relations(sources, ({ one, many }) => ({
   indexer: one(indexers, {
     fields: [sources.indexerId],
@@ -151,7 +154,6 @@ export const documents = pgTable(
   'documents',
   {
     id: text('id').primaryKey(),
-    documentType: text('document_type').notNull(),
     documentMeta: jsonb('document_meta').notNull(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     fetchedAt: timestamp('fetched_at', { mode: 'date' }),
@@ -161,6 +163,7 @@ export const documents = pgTable(
     dataProtectionPolicy: text('data_protection_policy'),
   },
   table => ({
+    cursor: index('cursor').on(table.createdAt),
     fetchTimeIdx: index('fetch_time_idx').on(table.fetchedAt),
   }),
 );

@@ -18,6 +18,14 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/sagin-config.json"
+      ],
+      "url": "/packages/sagin-app/sagin-config-schema.json"
+    }
+  ],
   "sqltools.connections": [
     {
       "previewLimit": 50,

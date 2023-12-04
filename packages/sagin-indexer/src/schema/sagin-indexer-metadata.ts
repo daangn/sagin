@@ -9,7 +9,8 @@ const schema = Object.freeze({
   properties: {
     protocols: {
       type: 'array',
-      description: 'Supported protocol by the implementation, client would connect via first entity of this array',
+      description:
+        'Supported protocol by the implementation, client would connect via first entity of this array',
       items: {
         type: 'object',
         properties: {

@@ -4,5 +4,5 @@ import { pgGenerate } from 'drizzle-dbml-generator';
 pgGenerate({
   schema,
   relational: true,
-  out: 'migrations/meta/current.dbml',
+  out: 'migrations/current.dbml',
 });

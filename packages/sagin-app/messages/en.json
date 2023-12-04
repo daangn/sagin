@@ -1,0 +1,14 @@
+{
+  "common": {
+    "role": {
+      "sys_admin": "System Admin",
+      "admin": "Admin",
+      "user": "User"
+    }
+  },
+  "admin": {
+    "members": {
+      "change_role": "Change Role"
+    }
+  }
+}

@@ -13,5 +13,12 @@ export default function AdminSectionHeader({ navItems }: Props) {
   const pathname = usePathname();
   const activeNavItem = navItems.find(item => item.path === pathname);
 
-  return <h3 className='text-lg font-medium'>{activeNavItem?.title || 'No title'}</h3>;
+  return (
+    <div className='mb-8'>
+      <h3 className='text-lg font-medium'>{activeNavItem?.title || 'No title'}</h3>
+      {activeNavItem?.description && (
+        <p className='text-sm text-muted-foreground'>{activeNavItem.description}</p>
+      )}
+    </div>
+  );
 }

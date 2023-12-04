@@ -1,27 +1,42 @@
 import { type Adapter, type AdapterAccount, type AdapterUser } from '@auth/core/adapters';
 import { createId } from '@paralleldrive/cuid2';
-import { Role } from '@sagin/core/models';
+import { Role, SystemState, UserMembershipStatus } from '@sagin/core/models';
 import { and, eq } from 'drizzle-orm';
 import { type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 import * as schema from './schema.ts';
-import { SystemStats } from './system-stats.ts';
+
+export type SignupPolicy = { type: 'open' } | { type: 'restricted'; allowedDomains: string[] };
 
 export type AdapterOptions = {
+  defaultLanguage: string;
+  defaultTimeZone: string;
   signupPolicy: SignupPolicy;
 };
 
-const defaultOptions: Readonly<AdapterOptions> = Object.freeze({
-  signupPolicy: { type: 'restricted', allowedDomains: [] },
-});
+export function createAdapter(
+  db: PostgresJsDatabase<typeof schema>,
+  { signupPolicy, defaultLanguage, defaultTimeZone }: AdapterOptions,
+): Adapter {
+  function couldAccept(
+    user: Pick<AdapterUser, 'email' | 'emailVerified'>,
+    allowedDomains: string[],
+  ) {
+    if (!user.emailVerified) {
+      return false;
+    }
+    const [, domain] = user.email.split('@');
+    return allowedDomains.some(allowedDomain => domain === allowedDomain);
+  }
 
-export function createAdapter(db: PostgresJsDatabase<typeof schema>, { signupPolicy } = defaultOptions): Adapter {
   return {
     async createUser(data) {
-      const initiatedBy = await db.query.systemStats.findFirst({
+      const initiatedBy = await db.query.systemState.findFirst({
         columns: { value: true },
-        where: (table, { and, eq }) =>
-          and(eq(table.category, SystemStats.InitiatedBy.category), eq(table.key, SystemStats.InitiatedBy.key)),
+        where: and(
+          eq(schema.systemState.category, SystemState.InitiatedBy.category),
+          eq(schema.systemState.key, SystemState.InitiatedBy.key),
+        ),
       });
       const shouldInitiate = !initiatedBy;
       const now = new Date();
@@ -32,23 +47,43 @@ export function createAdapter(db: PostgresJsDatabase<typeof schema>, { signupPol
         newUser = {
           ...data,
           id: createId(),
-          role: Role.SYS_ADMIN,
-          approvedAt: now,
+          role: Role.SystemAdmin,
+          preferredLanguage: defaultLanguage,
+          preferredTimeZone: defaultTimeZone,
+
+          membershipStatus: UserMembershipStatus.Active,
+          membershipAcceptedAt: now,
         };
       } else if (signupPolicy.type === 'restricted') {
         newUser = {
           ...data,
           id: createId(),
-          role: Role.USER,
-          approvedAt: shouldApproved(data, signupPolicy.allowedDomains) ? now : null,
+          role: Role.User,
+          preferredLanguage: defaultLanguage,
+          preferredTimeZone: defaultTimeZone,
+
+          ...(couldAccept(data, signupPolicy.allowedDomains)
+            ? {
+                membershipStatus: UserMembershipStatus.Active,
+                membershipAcceptedAt: now,
+              }
+            : {
+                membershipStatus: UserMembershipStatus.Pending,
+              }),
         };
-      } else {
+      } else if (signupPolicy.type === 'open') {
         newUser = {
           ...data,
           id: createId(),
-          role: Role.USER,
-          approvedAt: now,
+          role: Role.User,
+          preferredLanguage: defaultLanguage,
+          preferredTimeZone: defaultTimeZone,
+
+          membershipStatus: UserMembershipStatus.Active,
+          membershipAcceptedAt: now,
         };
+      } else {
+        throw new Error('invariant');
       }
 
       const result = await db.transaction(async tx => {
@@ -58,10 +93,11 @@ export function createAdapter(db: PostgresJsDatabase<typeof schema>, { signupPol
           .returning()
           .then(res => res[0] ?? null);
         if (shouldInitiate) {
-          await tx.insert(schema.systemStats).values({
-            ...SystemStats.InitiatedBy,
+          await tx.insert(schema.systemState).values({
+            ...SystemState.InitiatedBy,
             value: {
               user_id: newUser.id,
+              user_email: newUser.email,
             },
           });
         }
@@ -107,9 +143,6 @@ export function createAdapter(db: PostgresJsDatabase<typeof schema>, { signupPol
       return result;
     },
     async updateUser(data) {
-      if (!data.id) {
-        throw new Error('No user id.');
-      }
       const result = await db
         .update(schema.users)
         .set(data)
@@ -221,15 +254,4 @@ export function createAdapter(db: PostgresJsDatabase<typeof schema>, { signupPol
       return { provider, type, providerAccountId, userId };
     },
   };
-}
-
-type SignupPolicy = { type: 'open' } | { type: 'restricted'; allowedDomains: string[] };
-
-function shouldApproved(user: Pick<AdapterUser, 'email' | 'emailVerified'>, allowedDomains: string[]) {
-  if (!user.emailVerified) {
-    return false;
-  }
-
-  const [, domain] = user.email.split('@');
-  return allowedDomains.some(allowedDomain => domain === allowedDomain);
 }

@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "biomejs.biome",
-    "mtxr.sqltools"
+    "mtxr.sqltools",
+    "lokalise.i18n-ally"
   ]
 }

@@ -1,0 +1,404 @@
+{
+  "$ref": "#/definitions/config",
+  "definitions": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "site_url": {
+          "type": "string",
+          "description": "Canonical URL of the app"
+        },
+        "site_name": {
+          "type": "string",
+          "default": "Sagin",
+          "description": "Site name to diplay"
+        },
+        "default_locale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "ko"
+          ],
+          "default": "en",
+          "description": "Default user locale to display UI"
+        },
+        "default_timezone": {
+          "type": "string",
+          "description": "Default user timezone to display UI"
+        },
+        "secret": {
+          "type": "string",
+          "description": "Used to encrypt JWT, email verification token, etc"
+        },
+        "database": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "postgres",
+              "default": "postgres"
+            },
+            "connection_string": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "connection_string"
+          ],
+          "additionalProperties": false,
+          "description": "Database configuration. Only PostgreSQL is supported"
+        },
+        "search_engine": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "paradedb"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false,
+              "description": "Search by ParadeDB. This reuse database configuration"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "meilisearch"
+                },
+                "baseUrl": {
+                  "type": "string"
+                },
+                "apiKey": {
+                  "type": "string",
+                  "description": "Your Meilisearch master key"
+                }
+              },
+              "required": [
+                "type",
+                "baseUrl",
+                "apiKey"
+              ],
+              "additionalProperties": false,
+              "description": "Search by MeiliSearch"
+            }
+          ],
+          "description": "Search engine configuration. Used by keyword search & similarity search"
+        },
+        "graph_engine": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "age"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false,
+              "description": "Search by Apache AGE. This reuse database configuration"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "neo4j"
+                },
+                "auth": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "basic"
+                        },
+                        "user": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "user",
+                        "password"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "bearer"
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "token"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false,
+              "description": "Search by Neo4j. Neo4j compatible engines like Memgraph are also available."
+            }
+          ],
+          "description": "Graph engine configuration. Used by page rank & property search"
+        },
+        "smtp": {
+          "type": "object",
+          "properties": {
+            "host": {
+              "type": "string"
+            },
+            "port": {
+              "type": "string"
+            },
+            "secure": {
+              "type": "boolean",
+              "default": true
+            },
+            "auth": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "user",
+                "password"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "host",
+            "port"
+          ],
+          "additionalProperties": false,
+          "description": "SMTP server configuration"
+        },
+        "ai": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "openai"
+                },
+                "api_key": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "api_key"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "provider"
+          ],
+          "additionalProperties": false,
+          "description": "AI integration configuration"
+        },
+        "auth_providers": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "auth0"
+                  },
+                  "issuer": {
+                    "type": "string",
+                    "description": "https:// + your Auth0 application domain"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "issuer",
+                  "client_id",
+                  "client_secret"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "okta"
+                  },
+                  "issuer": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "issuer",
+                  "client_id",
+                  "client_secret"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "google"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "client_id",
+                  "client_secret"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "github"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  },
+                  "client_secret": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "client_id",
+                  "client_secret"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "db"
+                  }
+                },
+                "required": [
+                  "provider"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "description": "Auth provider configiguration"
+          },
+          "minItems": 1
+        },
+        "signup_policy": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "open"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "restricted"
+                },
+                "allowed_domains": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "default": [],
+                  "description": "Users with email matching the given domain will be automatically activated."
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": false
+            }
+          ],
+          "description": "User signup policy. If \"restricted\", users require a confirmation from the admin to activate the account. If \"open\", it is automatically activated. Don't set it to \"open\" unless you are on an already restricted network.",
+          "default": {
+            "type": "restricted",
+            "allowed_domains": []
+          }
+        }
+      },
+      "required": [
+        "site_url",
+        "default_timezone",
+        "secret",
+        "database",
+        "search_engine",
+        "graph_engine",
+        "auth_providers"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

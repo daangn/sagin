@@ -42,9 +42,12 @@ export async function registerIndexerClient(url: URL): Promise<IndexerClient> {
         throw new Error(`Sagin app doesn't support ${protocol.type} protocol`);
     }
   } catch (e) {
-    throw new Error(`Given URL ${url} doesn't seem to provide proper Sagin indexer implementation`, {
-      cause: e,
-    });
+    throw new Error(
+      `Given URL ${url} doesn't seem to provide proper Sagin indexer implementation`,
+      {
+        cause: e,
+      },
+    );
   }
 }
 

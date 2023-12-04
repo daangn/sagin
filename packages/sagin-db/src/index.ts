@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 
-import { pool } from './pool.ts';
+import pool from './pool.ts';
 import * as schema from './schema.ts';
 
 const db = drizzle(pool, {
