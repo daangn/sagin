@@ -13,6 +13,7 @@
     "next-auth": "5.0.0-beta.3",
     "react": "0.0.0-experimental-6b3834a45-20231110",
     "react-dom": "0.0.0-experimental-6b3834a45-20231110",
+    "rescript": "11.0.0-rc.6",
     "vite": "5.0.0-beta.18"
   },
   "devDependencies": {

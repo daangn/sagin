@@ -1,6 +1,6 @@
 import { type Adapter, type AdapterAccount, type AdapterUser } from '@auth/core/adapters';
 import { createId } from '@paralleldrive/cuid2';
-import { Role, SystemState, UserMembershipStatus } from '@sagin/core/models';
+import { Role, SystemState, User } from '@sagin/core/models';
 import { and, eq } from 'drizzle-orm';
 import { type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
@@ -33,10 +33,7 @@ export function createAdapter(
     async createUser(data) {
       const initiatedBy = await db.query.systemState.findFirst({
         columns: { value: true },
-        where: and(
-          eq(schema.systemState.category, SystemState.InitiatedBy.category),
-          eq(schema.systemState.key, SystemState.InitiatedBy.key),
-        ),
+        where: and(eq(schema.systemState.key, SystemState.Key.InitiatedBy)),
       });
       const shouldInitiate = !initiatedBy;
       const now = new Date();
@@ -51,7 +48,7 @@ export function createAdapter(
           preferredLanguage: defaultLanguage,
           preferredTimeZone: defaultTimeZone,
 
-          membershipStatus: UserMembershipStatus.Active,
+          membershipStatus: User.MembershipStatus.Active,
           membershipAcceptedAt: now,
         };
       } else if (signupPolicy.type === 'restricted') {
@@ -64,11 +61,11 @@ export function createAdapter(
 
           ...(couldAccept(data, signupPolicy.allowedDomains)
             ? {
-                membershipStatus: UserMembershipStatus.Active,
+                membershipStatus: User.MembershipStatus.Active,
                 membershipAcceptedAt: now,
               }
             : {
-                membershipStatus: UserMembershipStatus.Pending,
+                membershipStatus: User.MembershipStatus.Pending,
               }),
         };
       } else if (signupPolicy.type === 'open') {
@@ -79,7 +76,7 @@ export function createAdapter(
           preferredLanguage: defaultLanguage,
           preferredTimeZone: defaultTimeZone,
 
-          membershipStatus: UserMembershipStatus.Active,
+          membershipStatus: User.MembershipStatus.Active,
           membershipAcceptedAt: now,
         };
       } else {
@@ -94,10 +91,10 @@ export function createAdapter(
           .then(res => res[0] ?? null);
         if (shouldInitiate) {
           await tx.insert(schema.systemState).values({
-            ...SystemState.InitiatedBy,
+            key: SystemState.Key.InitiatedBy,
             value: {
-              user_id: newUser.id,
-              user_email: newUser.email,
+              user_id: result.id,
+              user_email: result.email,
             },
           });
         }

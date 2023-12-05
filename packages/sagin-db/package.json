@@ -38,7 +38,8 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@sagin/core": "workspace:^",
     "drizzle-orm": "^0.29.0",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "pgvector": "^0.1.5"
   },
   "devDependencies": {
     "@types/pg": "^8.10.9",

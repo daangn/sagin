@@ -1,5 +1,5 @@
 import * as assert from 'node:assert/strict';
-import { type Role, UserMembershipStatus } from '@sagin/core/models';
+import { type Role, type User } from '@sagin/core/models';
 import { type SelectUser } from '@sagin/db/schema';
 
 export type Member = {
@@ -7,8 +7,8 @@ export type Member = {
   name: string;
   email: string;
   image: string | null;
-  role: Role;
-  membershipStatus: UserMembershipStatus;
+  role: Role.t;
+  membershipStatus: User.membershipStatus;
 };
 
 type MemberSelection = Pick<

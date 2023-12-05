@@ -33,6 +33,8 @@
     "ignore": [
       "packages/sagin-app/src/lib/ui/*",
       "**/.next/**",
+      "*.bs.js",
+      "*.gen.ts",
       "*.json"
     ]
   }

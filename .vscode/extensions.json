@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "biomejs.biome",
+    "chenglou92.rescript-vscode",
     "mtxr.sqltools",
     "lokalise.i18n-ally"
   ]

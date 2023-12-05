@@ -1,6 +1,6 @@
 import Auth0Provider from '@auth/core/providers/auth0';
 import OktaProvider from '@auth/core/providers/okta';
-import { Role, checkRole } from '@sagin/core/models';
+import { Role } from '@sagin/core/models';
 import db from '@sagin/db';
 import { type SignupPolicy, createAdapter } from '@sagin/db/auth';
 import NextAuth, { type Session } from 'next-auth';
@@ -17,15 +17,15 @@ export type AuthUser = {
   name: string | null;
   email: string;
   image: string | null;
-  role: Role;
+  role: Role.t;
   locale: string | null;
 };
 
 export class AuthorizationError extends Error {
-  requiredRole: Role;
-  currentRole: Role;
+  requiredRole: Role.t;
+  currentRole: Role.t;
 
-  constructor(requiredRole: Role, currentRole: Role) {
+  constructor(requiredRole: Role.t, currentRole: Role.t) {
     super(`Permission denied. required: ${requiredRole}, actual: ${currentRole}`);
     this.requiredRole = requiredRole;
     this.currentRole = currentRole;
@@ -34,18 +34,18 @@ export class AuthorizationError extends Error {
 
 export function userRequired(
   user: AuthUser | null | undefined,
-  requiredRole: Role = Role.User,
+  requiredRole: Role.t = Role.User,
 ): asserts user {
   if (!user) {
     return redirect('/api/auth/signin');
   }
-  if (!checkRole(requiredRole, user.role)) {
+  if (!Role.check(requiredRole, user.role)) {
     throw new AuthorizationError(requiredRole, user.role);
   }
 }
 
 // For RSC side
-export async function getCurrentUser(requiredRole?: Role): Promise<AuthUser> {
+export async function getCurrentUser(requiredRole?: Role.t): Promise<AuthUser> {
   const session = await authCache();
   userRequired(session?.user, requiredRole);
 
@@ -53,7 +53,7 @@ export async function getCurrentUser(requiredRole?: Role): Promise<AuthUser> {
 }
 
 // For client side
-export function useCurrentUser(requiredRole?: Role): AuthUser {
+export function useCurrentUser(requiredRole?: Role.t): AuthUser {
   const session = useSession();
   userRequired(session?.data?.user, requiredRole);
 

@@ -2517,6 +2517,8 @@ __metadata:
 "@sagin/core@workspace:^, @sagin/core@workspace:packages/sagin-core":
   version: 0.0.0-use.local
   resolution: "@sagin/core@workspace:packages/sagin-core"
+  dependencies:
+    rescript: "npm:next"
   languageName: unknown
   linkType: soft
 
@@ -2532,6 +2534,7 @@ __metadata:
     drizzle-kit: "npm:^0.20.2"
     drizzle-orm: "npm:^0.29.0"
     pg: "npm:^8.11.3"
+    pgvector: "npm:^0.1.5"
     typescript: "npm:^5.3.2"
     vite: "npm:^5.0.2"
     vite-node: "npm:0.34.6"
@@ -6345,6 +6348,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pgvector@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "pgvector@npm:0.1.5"
+  checksum: 84726f48ce1a614ec71223831f26c0f8508d92b52c4a6cc1ee66ae113282176ec272cb09d19975d54c28f166bdb21761f42db32979278e640f1b98578ce9cf5f
+  languageName: node
+  linkType: hard
+
 "picocolors@npm:^1.0.0":
   version: 1.0.0
   resolution: "picocolors@npm:1.0.0"
@@ -6904,6 +6914,17 @@ __metadata:
     module-details-from-path: "npm:^1.0.3"
     resolve: "npm:^1.22.1"
   checksum: 8d44c4794b318eb393645e303cb336cb4baf3e9d2e368dac0a4df1a59219c970e17a52c389bf02e22fde33af6bb3206552eb388b9edf082972037c6169ec2eea
+  languageName: node
+  linkType: hard
+
+"rescript@npm:11.0.0-rc.6":
+  version: 11.0.0-rc.6
+  resolution: "rescript@npm:11.0.0-rc.6"
+  bin:
+    bsc: bsc
+    bstracing: lib/bstracing
+    rescript: rescript
+  checksum: 3371c6ec385e51d7c8106a49dd9591de5f4c21f68c177af7a538410256d0743b1146bea070f65286e1b6b8f0e7d943700073e6002d4d65b6bb91aa64a5df98a5
   languageName: node
   linkType: hard
 

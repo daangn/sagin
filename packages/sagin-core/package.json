@@ -17,5 +17,8 @@
         "import": "./dist/utils.js"
       }
     }
+  },
+  "devDependencies": {
+    "rescript": "next"
   }
 }

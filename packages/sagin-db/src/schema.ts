@@ -1,20 +1,22 @@
 import { type AdapterAccount } from '@auth/core/adapters';
-import { type Role, type UserMembershipStatus } from '@sagin/core/models';
+import {
+  type DataProtection,
+  type Preference,
+  type Role,
+  type SystemState,
+  type User,
+} from '@sagin/core/models';
 import { relations } from 'drizzle-orm';
 import { index, integer, jsonb, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
+import { vector } from 'pgvector/drizzle-orm';
 
-export const systemState = pgTable(
-  'system_state',
-  {
-    category: text('category').notNull(),
-    key: text('key').notNull(),
-    value: jsonb('value').notNull(),
-  },
-  table => ({
-    pk: primaryKey({ columns: [table.category, table.key] }),
-    categoryIdx: index('category_idx').on(table.category),
-  }),
-);
+/**
+ * System-wide shared state
+ */
+export const systemState = pgTable('system_state', {
+  key: text('key').$type<SystemState.key>().primaryKey(),
+  value: jsonb('value').notNull(),
+});
 export type SelectSystemState = typeof systemState.$inferSelect;
 export type InsertSystemState = typeof systemState.$inferInsert;
 
@@ -26,20 +28,22 @@ export const users = pgTable(
     email: text('email').notNull().unique(),
     emailVerified: timestamp('email_verified', { mode: 'date' }),
     image: text('image'),
-    role: text('role').$type<Role>().notNull(),
-    preferredLanguage: text('preferred_language'),
-    preferredTimeZone: text('preferred_timezone'),
+    role: text('role').$type<Role.t>().notNull(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
 
+    // a few preferences frequently joined
+    preferredLanguage: text('preferred_language'),
+    preferredTimeZone: text('preferred_timezone'),
+
     // always require to validate membership status
-    membershipStatus: text('membership_status').$type<UserMembershipStatus>().notNull(),
+    membershipStatus: text('membership_status').$type<User.membership['kind']>().notNull(),
     membershipAcceptedAt: timestamp('membership_accepted_at', { mode: 'date' }),
     membershipDecliedAt: timestamp('membership_declied_at', { mode: 'date' }),
     membershipDeactivatedAt: timestamp('membership_deactivated_at', { mode: 'date' }),
   },
   table => ({
     cursor: index('cursor').on(table.membershipStatus, table.email),
-    membership: index('member_status').on(table.membershipStatus),
+    membershipIdx: index('membership_idx').on(table.membershipStatus),
   }),
 );
 export const usersRelations = relations(users, ({ many }) => ({
@@ -103,64 +107,84 @@ export const verificationTokens = pgTable(
   }),
 );
 
-export const indexers = pgTable(
-  'indexers',
+/**
+ * The indexer group is an unit of system integration
+ *
+ * Typically used by a member (hosted indexer). Multiple members are allowed.
+ *
+ * Connection info is not directly stored in DB because network topologies are vary.
+ * It should belong to and validated by app's configuration.
+ */
+export const indexerGroups = pgTable(
+  'indexer_groups',
   {
-    id: text('id').primaryKey(),
-    indexerMeta: jsonb('indexer_meta').notNull(),
-    name: text('name').notNull(),
-    endpoint: text('endpoint').notNull(),
+    groupKey: text('group_key').primaryKey(),
+    groupName: text('group_name').notNull(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-    dataProtectionPolicy: text('data_protection_policy'),
+    dataProtectionPolicy: text('data_protection_policy').$type<DataProtection.policy>(),
   },
   table => ({
     cursor: index('cursor').on(table.createdAt),
   }),
 );
-export const indexersRelations = relations(indexers, ({ many }) => ({
+export const indexerGroupsRelations = relations(indexerGroups, ({ many }) => ({
   sources: many(sources),
 }));
-export type SelectIndexer = typeof indexers.$inferSelect;
-export type InsertIndexer = typeof indexers.$inferInsert;
+export type SelectIndexerGroup = typeof indexerGroups.$inferSelect;
+export type InsertIndexerGroup = typeof indexerGroups.$inferInsert;
 
+/**
+ * The source is a locator to begin crawling documents
+ */
 export const sources = pgTable(
   'sources',
   {
     id: text('id').primaryKey(),
     sourceMeta: jsonb('source_meta').notNull(),
-    indexerId: text('indexer_id')
+    indexerGroup: text('indexer_group')
       .notNull()
-      .references(() => indexers.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-    indexKey: text('index_key').notNull().unique(),
+      .references(() => indexerGroups.groupKey, { onUpdate: 'cascade', onDelete: 'cascade' }),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     fetchedAt: timestamp('fetched_at', { mode: 'date' }),
-    dataProtectionPolicy: text('data_protection_policy'),
+    dataProtectionPolicy: text('data_protection_policy').$type<DataProtection.policy>(),
   },
   table => ({
     cursor: index('cursor').on(table.createdAt),
+    fetchTimeIdx: index('fetch_time_idx').on(table.fetchedAt),
   }),
 );
 export const sourcesRelations = relations(sources, ({ one, many }) => ({
-  indexer: one(indexers, {
-    fields: [sources.indexerId],
-    references: [indexers.id],
+  indexerGroup: one(indexerGroups, {
+    fields: [sources.indexerGroup],
+    references: [indexerGroups.groupKey],
   }),
   documentRelations: many($relationsSourcesDocuments),
 }));
 export type SelectSource = typeof sources.$inferSelect;
 export type InsertSource = typeof sources.$inferInsert;
 
+/**
+ * The document is an actual content with its metadata
+ */
 export const documents = pgTable(
   'documents',
   {
     id: text('id').primaryKey(),
     documentMeta: jsonb('document_meta').notNull(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-    fetchedAt: timestamp('fetched_at', { mode: 'date' }),
+    fetchedAt: timestamp('fetched_at', { mode: 'date' }).notNull(),
+    dataProtectionPolicy: text('data_protection_policy').$type<DataProtection.policy>(),
+
+    // Content have its own internal representation.
+    content: jsonb('content'),
+
+    // Then converted into frequently used formats like Plain, HTML, GFM
     contentHtml: text('content_html'),
     contentPlain: text('content_plain'),
     contentGfm: text('content_gfm'),
-    dataProtectionPolicy: text('data_protection_policy'),
+
+    // Store text embedding vectors generated by OpenAI's embedding-ada-002 model
+    embedding: vector('embedding', { dimensions: 1536 }),
   },
   table => ({
     cursor: index('cursor').on(table.createdAt),
@@ -173,6 +197,7 @@ export const documentsRelations = relations(documents, ({ many }) => ({
 export type SelectDocument = typeof documents.$inferSelect;
 export type InsertDocument = typeof documents.$inferInsert;
 
+// sources n <-> m documents
 export const $relationsSourcesDocuments = pgTable(
   'relations_sources_documents',
   {
@@ -198,22 +223,17 @@ export const sourcesDocumentsRelations = relations($relationsSourcesDocuments, (
   }),
 }));
 
-export const preferences = pgTable(
-  'preferences',
-  {
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
-    category: text('category').notNull(),
-    key: text('key').notNull(),
-    value: jsonb('value').notNull(),
-  },
-  table => ({
-    pk: primaryKey({ columns: [table.userId, table.category, table.key] }),
-    userIdx: index('user_idx').on(table.userId),
-    categoryIdx: index('category_idx').on(table.category),
-  }),
-);
+/**
+ * User preferences; every personalized state goes here
+ */
+export const preferences = pgTable('preferences', {
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onUpdate: 'cascade', onDelete: 'cascade' }),
+  // Preference key could be duplicated
+  key: text('key').$type<Preference.key>().notNull(),
+  value: jsonb('value').notNull(),
+});
 export const preferencesRelations = relations(preferences, ({ one }) => ({
   user: one(users, {
     fields: [preferences.userId],
@@ -222,3 +242,26 @@ export const preferencesRelations = relations(preferences, ({ one }) => ({
 }));
 export type SelectPreference = typeof preferences.$inferSelect;
 export type InsertPreference = typeof preferences.$inferInsert;
+
+export const auditLogs = pgTable(
+  'audit_logs',
+  {
+    id: text('id').primaryKey(),
+    actorId: text('actor_id').notNull(),
+    actorEmail: text('actor_email'),
+    actorRole: text('actor_role').$type<Role.t>(),
+    entityId: text('entity_id').notNull(),
+    eventName: text('event_name').notNull(),
+    eventTimestamp: timestamp('event_timestamp', { mode: 'date' }).notNull(),
+    eventResult: text('event_result').notNull(),
+  },
+  // skip indexing for insertion speed
+  // maybe using bm25 could be better, revisit later anyway
+  table => ({
+    // actorIdx: index('actor_idx').on(table.actorId),
+    // eventTimestampIdx: index('event_timestamp_idx').on(table.eventTimestamp),
+    // eventNameIdx: index('event_name_idx').on(table.eventTimestamp),
+  }),
+);
+export type SelectAuditLog = typeof auditLogs.$inferSelect;
+export type InsertAuditLog = typeof auditLogs.$inferInsert;

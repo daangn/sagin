@@ -1,4 +1,4 @@
-import { UserMembershipStatus } from '@sagin/core/models';
+import { User } from '@sagin/core/models';
 import db from '@sagin/db';
 import * as React from 'react';
 
@@ -18,8 +18,8 @@ const getMembers = React.cache(async (keyword?: string) => {
     where: (users, { and, or, eq, ilike }) =>
       and(
         or(
-          eq(users.membershipStatus, UserMembershipStatus.Active),
-          eq(users.membershipStatus, UserMembershipStatus.Inactive),
+          eq(users.membershipStatus, User.MembershipStatus.Active),
+          eq(users.membershipStatus, User.MembershipStatus.Inactive),
         ),
         keyword ? or(ilike(users.name, keyword), ilike(users.email, keyword)) : undefined,
       ),
