@@ -1,3 +1,4 @@
+const path = require('node:path');
 const withNextIntl = require('next-intl/plugin')();
 
 const useTurbo = process.env.TURBOPACK != null;
@@ -9,5 +10,11 @@ module.exports = withNextIntl({
 
     // This isn't supported by Turbopack yet
     instrumentationHook: !useTurbo,
+
+    // not quiet stable yet
+    // turbotrace: {},
+    outputFileTracingRoot: path.join(__dirname, '../../'),
   },
+
+  output: 'standalone',
 });
