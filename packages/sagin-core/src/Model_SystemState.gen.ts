@@ -3,11 +3,10 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import * as Model_SystemStateBS__Es6Import from './Model_SystemState.bs.js';
-const Model_SystemStateBS: any = Model_SystemStateBS__Es6Import;
+import * as Model_SystemStateBS from './Model_SystemState.bs.js';
 
 export type key = "initiated_by";
 
-export const Key_InitiatedBy: key = Model_SystemStateBS.Key.InitiatedBy;
+export const Key_InitiatedBy: key = Model_SystemStateBS.Key.InitiatedBy as any;
 
-export const Key: { InitiatedBy: key } = Model_SystemStateBS.Key
+export const Key: { InitiatedBy: key } = Model_SystemStateBS.Key as any;

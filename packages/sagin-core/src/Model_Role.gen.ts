@@ -3,15 +3,14 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import * as Model_RoleBS__Es6Import from './Model_Role.bs.js';
-const Model_RoleBS: any = Model_RoleBS__Es6Import;
+import * as Model_RoleBS from './Model_Role.bs.js';
 
 export type t = "user" | "admin" | "sys_admin";
 
-export const User: t = Model_RoleBS.User;
+export const User: t = Model_RoleBS.User as any;
 
-export const Admin: t = Model_RoleBS.Admin;
+export const Admin: t = Model_RoleBS.Admin as any;
 
-export const SystemAdmin: t = Model_RoleBS.SystemAdmin;
+export const SystemAdmin: t = Model_RoleBS.SystemAdmin as any;
 
-export const check: (requiredRole:t, userRole:t) => boolean = Model_RoleBS.check;
+export const check: (requiredRole:t, userRole:t) => boolean = Model_RoleBS.check as any;

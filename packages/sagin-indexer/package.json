@@ -34,9 +34,10 @@
     }
   },
   "devDependencies": {
-    "@trpc/server": "^10.43.3",
-    "json-schema-to-ts": "^2.9.2",
-    "typescript": "^5.3.2",
+    "@trpc/server": "^10.45.0",
+    "json-schema-to-ts": "^3.0.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
     "zod": "^3.22.4"
   }
 }

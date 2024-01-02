@@ -37,16 +37,16 @@
     "@auth/core": "experimental",
     "@paralleldrive/cuid2": "^2.2.2",
     "@sagin/core": "workspace:^",
-    "drizzle-orm": "^0.29.0",
+    "drizzle-orm": "^0.29.2",
     "pg": "^8.11.3",
-    "pgvector": "^0.1.5"
+    "pgvector": "^0.1.7"
   },
   "devDependencies": {
     "@types/pg": "^8.10.9",
-    "drizzle-dbml-generator": "^0.5.0",
-    "drizzle-kit": "^0.20.2",
-    "typescript": "^5.3.2",
-    "vite": "^5.0.2",
-    "vite-node": "0.34.6"
+    "drizzle-dbml-generator": "^0.6.1",
+    "drizzle-kit": "^0.20.9",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vite-node": "^1.1.1"
   }
 }

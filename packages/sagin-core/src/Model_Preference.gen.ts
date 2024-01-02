@@ -3,15 +3,14 @@
 /* eslint-disable */
 /* tslint:disable */
 
-import * as Model_PreferenceBS__Es6Import from './Model_Preference.bs.js';
-const Model_PreferenceBS: any = Model_PreferenceBS__Es6Import;
+import * as Model_PreferenceBS from './Model_Preference.bs.js';
 
 export type key = 
     "preferred_language"
   | "preferred_timezone";
 
-export const Key_PreferredLanguage: key = Model_PreferenceBS.Key.PreferredLanguage;
+export const Key_PreferredLanguage: key = Model_PreferenceBS.Key.PreferredLanguage as any;
 
-export const Key_PreferredTimeZone: key = Model_PreferenceBS.Key.PreferredTimeZone;
+export const Key_PreferredTimeZone: key = Model_PreferenceBS.Key.PreferredTimeZone as any;
 
-export const Key: { PreferredLanguage: key; PreferredTimeZone: key } = Model_PreferenceBS.Key
+export const Key: { PreferredLanguage: key; PreferredTimeZone: key } = Model_PreferenceBS.Key as any;
