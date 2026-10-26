@@ -24,7 +24,7 @@
     "@types/node": "^20.10.6",
     "json-schema-to-ts": "^3.0.0",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10",
+    "vite": "^6.4.4",
     "vite-node": "^1.1.1",
     "vite-tsconfig-paths": "^4.2.3",
     "vitest": "^1.1.1"

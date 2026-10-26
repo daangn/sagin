@@ -46,7 +46,7 @@
     "drizzle-dbml-generator": "^0.6.1",
     "drizzle-kit": "^0.20.9",
     "typescript": "^5.3.3",
-    "vite": "^5.0.10",
+    "vite": "^6.4.4",
     "vite-node": "^1.1.1"
   }
 }
