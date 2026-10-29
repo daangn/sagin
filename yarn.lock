@@ -2437,7 +2437,7 @@ __metadata:
     next-auth: "npm:beta"
     next-intl: "npm:^3.4.0"
     next-themes: "npm:^0.2.1"
-    nodemailer: "npm:^6.9.8"
+    nodemailer: "npm:^10.1.4"
     postcss: "npm:^8.4.32"
     react: "npm:experimental"
     react-dom: "npm:experimental"
@@ -5995,10 +5995,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.9.8":
-  version: 6.9.8
-  resolution: "nodemailer@npm:6.9.8"
-  checksum: 9332587975240ac648e1295b1df15e339fcace3f7fab8af0382e7f2dd10e48296344dfa698d58f1667f220f7fe13c779d55d39144c9cd9ed6f5f559714183c75
+"nodemailer@npm:^10.1.4":
+  version: 10.1.4
+  resolution: "nodemailer@npm:10.1.4"
+  checksum: fa60d4757c876b88ded425530b0f9c041bf793f7369fa673d3eb6df24f47ea67128566bca10ed8b81ecca17ec682d7491bcc032d328e6ca878d11c91472ab3d2
   languageName: node
   linkType: hard
 
