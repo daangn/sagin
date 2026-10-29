@@ -39,7 +39,7 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "use-intl": "^3.4.0",
-    "zod": "^3.22.4"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@trpc/server": "^10.45.0",
